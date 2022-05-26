@@ -15,3 +15,33 @@
 * If you are building a mobile app, you are building a `Public` application type. Mobile apps don't have the ability to be deployed with a client secret, since users of the app would be able to extract the secret.
 * Any HTTP client that makes a request to an HTTP server is using the `back channel`, even if that client is JavaScript code in a browser.
 * Using the browser’s address bar to move data between two other pieces of software is using the `front channel`.
+* Signed in with Github to https://developer.okta.com
+* [Security -> API -> copy 'Issuer URI'](https://dev-88389792-admin.okta.com/admin/oauth2/as)
+* https://oauth.school
+
+```bash
+curl 'https://oauth.school/exercise/introduction/save' -X POST -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8' -H 'Content-Type: application/x-www-form-urlencoded' -H 'Origin: https://oauth.school' -H 'Connection: keep-alive' -H 'Referer: https://oauth.school/exercise/introduction/' -H 'Upgrade-Insecure-Requests: 1' -H 'Sec-Fetch-Dest: document' -H 'Sec-Fetch-Mode: navigate' -H 'Sec-Fetch-Site: same-origin' -H 'Sec-Fetch-User: ?1' --data-raw 'issuer=https%3A%2F%2Fdev-88389792.okta.com%2Foauth2%2Fdefault'
+```
+
+* `authorization_endpoint=https://dev-88389792.okta.com/oauth2/default/v1/authorize`
+* `token_endpoint=https://dev-88389792.okta.com/oauth2/default/v1/token`
+
+```bash
+await fetch("https://oauth.school/exercise/introduction/check", {
+    "credentials": "include",
+    "headers": {
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Upgrade-Insecure-Requests": "1",
+        "Sec-Fetch-Dest": "document",
+        "Sec-Fetch-Mode": "navigate",
+        "Sec-Fetch-Site": "same-origin",
+        "Sec-Fetch-User": "?1"
+    },
+    "referrer": "https://oauth.school/exercise/introduction/",
+    "body": "authorization_endpoint=https%3A%2F%2Fdev-88389792.okta.com%2Foauth2%2Fdefault%2Fv1%2Fauthorize&token_endpoint=https%3A%2F%2Fdev-88389792.okta.com%2Foauth2%2Fdefault%2Fv1%2Ftoken",
+    "method": "POST",
+    "mode": "cors"
+});
+```
+
