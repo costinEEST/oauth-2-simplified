@@ -57,21 +57,35 @@ await fetch("https://oauth.school/exercise/introduction/check", {
   - AS: Let me verify the hash of that secret.. ok here is an access token!
   - App: Please let me access this user's data with this access token!
 
-* Code verifier (secret): random string 43-128 characters long
-* Code challenge (public hash): base64url(sha256(code_verifier))
+* [PKCE (RFC 7636) aka Proof Key for Code Exchange](https://oauth.net/2/pkce)
+* PKCE Code verifier (secret): random string 43-128 characters long
+* PKCE Code challenge (public hash): base64url(sha256(code_verifier))
+* The Authorization Code Injection aka Replay attack: https://speakerdeck.com/leastprivilege/oauth-and-openid-connect-security-best-practices?slide=28, https://codeburst.io/missing-the-point-in-securing-oauth-2-0-83968708b467#5bc5, https://github.com/larkintuckerllc/hello-oauth-pkce, https://www.thehacker.recipes/web/config/oauth-2.0#authorization-code-injection, https://arxiv.org/pdf/2110.01005.pdf
 
-```curl
-https://authorization-server.com/auth? response_type=code&
+- https://github.com/koenbuyens/Vulnerable-OAuth-2.0-Applications
+- https://www.scottbrady91.com/oauth/client-authentication-vs-pkce
+- [OAuth 2.0 RFC Reference](https://linktr.ee/oauth2)
+
+- The authorization endpoint
+
+```bash
+https://authorization-server.com/auth?
+response_type=code&
 client_id=CLIENT_ID&
 redirect_uri=REDIRECT_URI&
-scope=photos& state=XXXXXX&
-code_challenge=XXXXXXXXXXXXX& code_challenge_method=s256
+scope=photos&
+state=XXXXXX&
+code_challenge=XXXXXXXXXXXXX&
+code_challenge_method=s256
 ```
 
-```curl
-https://example-app.com/redirect? error=access_denied&
+```bash
+https://example-app.com/redirect?
+error=access_denied&
 state=XXXXXXX&
 ```
+
+- The back channel request
 
 ```curl
 POST https://authorization-server.com/token?
@@ -83,6 +97,8 @@ client_id=CLIENT_ID&
 client_secret=CLIENT_SECRET
 ```
 
+- The authorization server answers back with an access token
+
 ```json
 {
   "token_type": "Bearer",
@@ -92,6 +108,8 @@ client_secret=CLIENT_SECRET
   "refresh_token": "H4HSMMV2409INW"
 }
 ```
+
+- Using the refresh token
 
 ```curl
 POST https://authorization-server.com/token?
