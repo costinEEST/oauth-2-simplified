@@ -118,3 +118,49 @@ refresh_token=REFRESH_TOKEN&
 client_id=CLIENT_ID&
 client_secret=CLIENT_SECRET
 ```
+
+- Okta Developer dashboard -> Applications -> Applications -> Create App Integration -> OpenID Connect -> Web Application
+- Sign-in redirect URIs {https://example-app.com/redirect} -> Allow everyone in your organization to access
+- [Generate a random string between 43-128 characters long](https://example-app.com/pkce)
+
+```bash
+https://dev-xxxxxx.okta.com/oauth2/default/v1/authorize?
+  response_type=code&
+  scope={YOUR_SCOPE}&
+  client_id={YOUR_CLIENT_ID}&
+  state={RANDOM_STRING}&
+  redirect_uri=https://example-app.com/redirect&
+  code_challenge={YOUR_CODE_CHALLENGE}&
+  code_challenge_method=S256
+```
+
+- https://oauth.school/exercise/web -> https://dev-88389792.okta.com/oauth2/default/v1/authorize?response_type=code&scope=photos&client_id=0oa59a68c4SkqfxL25d7&state=229c95593706a5f260d9897cc1a94042d0ae93cf0698a82dd2c031c9&redirect_uri=https://example-app.com/redirect&code_challenge=DHR3t9tybpkYQ8ISoqc9QsdWh_6ssR4tWQyxZJTiEKI&code_challenge_method=S256 -> Check your URL -> https://example-app.com/redirect?code=WhLVXTAVoQp4IYcnlppl_FQrQq_-nk8uZ1ZRFuehLTc&state=229c95593706a5f260d9897cc1a94042d0ae93cf0698a82dd2c031c9
+
+```curl
+curl -X POST https://dev-xxxxxx.okta.com/oauth2/default/v1/token \
+  -d grant_type=authorization_code \
+  -d redirect_uri=https://example-app.com/redirect \
+  -d client_id={YOUR_CLIENT_ID} \
+  -d client_secret={YOUR_CLIENT_SECRET} \
+  -d code_verifier={YOUR_CODE_VERIFIER} \
+  -d code={YOUR_AUTHORIZATION_CODE}
+```
+
+```curl
+curl -X POST https://dev-88389792.okta.com/oauth2/default/v1/token \
+  -d grant_type=authorization_code \
+  -d redirect_uri=https://example-app.com/redirect \
+  -d client_id=0oa59a68c4SkqfxL25d7 \
+  -d client_secret=bW5jA4dMf72xEPyAAhvWbIGHxPLxpw8QeVz-5PX5 \
+  -d code_verifier=229c95593706a5f260d9897cc1a94042d0ae93cf0698a82dd2c031c9 \
+  -d code=WhLVXTAVoQp4IYcnlppl_FQrQq_-nk8uZ1ZRFuehLTc
+```
+
+```json
+{
+  "token_type": "Bearer",
+  "expires_in": 3600,
+  "access_token": "eyJraWQiOiI1RVR5MWFEdmJpR1FQUlpBWE1CdHZkaVI1Wm9QUXhWajJOcnRsUENLUWZRIiwiYWxnIjoiUlMyNTYifQ.eyJ2ZXIiOjEsImp0aSI6IkFULk9hVWtHSkVpWTlwWWFMdEFpNkdhZlprdWNYQVRScTJmMFB4SnBDeXRhRjgiLCJpc3MiOiJodHRwczovL2Rldi04ODM4OTc5Mi5va3RhLmNvbS9vYXV0aDIvZGVmYXVsdCIsImF1ZCI6ImFwaTovL2RlZmF1bHQiLCJpYXQiOjE2NTQyNjIyOTcsImV4cCI6MTY1NDI2NTg5NywiY2lkIjoiMG9hNTlhNjhjNFNrcWZ4TDI1ZDciLCJ1aWQiOiIwMHU1NnJldnRrUmMyMURaTDVkNyIsInNjcCI6WyJwaG90b3MiXSwiYXV0aF90aW1lIjoxNjU0MjYxODU5LCJzdWIiOiJjb3N0aW5FRVNUQGdpdGh1Yi5va3RhaWRwIn0.rAZUivsF7eHcDwY8F0PQSMOoUAwP5yx7EYJ4r_RVpAKbuvU6mQ2AIKd_V5tAFppYLCPi5npJW2b2_Gx5tBbje2dzOu-Ysx1-UZXSAk6PVbl-CNp1-zL0iB_TMVt9Ueho92_wKV-oV5XL9WvHZZ85DUJBpPAgMIiA14i25uAYSxR6mbWkVvfo5gdAxhVSvY-uNCCC7YDsIfIDTstNgJ_gcTic5znCKWhRCSzgKGULVBgm6ehDI0x4o_xgajqM5lmij7hGn4UBD3NPY_62WyQEDL53rM8aqeGca4ci6-J_u--vs0-ElAt69yiMyfD7jG1ztYxvWciMLctjqxjmK48cDw",
+  "scope": "photos"
+}
+```
