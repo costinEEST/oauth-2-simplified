@@ -167,3 +167,71 @@ curl -X POST https://dev-88389792.okta.com/oauth2/default/v1/token \
 
 - https://developer.apple.com/documentation/safariservices/sfsafariviewcontroller
 - https://developer.chrome.com/docs/android/custom-tabs
+- Okta Developer dashboard -> Applications -> Applications -> Create App Integration -> OpenID Connect -> Native Application -> for GrantType check 'Refresh Token' -> Under Sign-in redirect URIs, replace the default value with https://example-app.com/redirect as the redirect URI for your application -> Allow everyone in your organization to access -> Save
+
+```bash
+    https://dev-xxxxxx.okta.com/oauth2/default/v1/authorize?
+      response_type=code&
+      scope=offline_access+{YOUR_SCOPE}&
+      client_id={YOUR_CLIENT_ID}&
+      state={RANDOM_STRING}&
+      redirect_uri=https://example-app.com/redirect&
+      code_challenge={YOUR_CODE_CHALLENGE}&
+      code_challenge_method=S256
+```
+
+- https://oauth.school/exercise/refresh -> Authorization Request (https://dev-88389792.okta.com/oauth2/default/v1/authorize?response_type=code&scope=offline_access+photos&client_id=0oa5al8cuxwP0RfNd5d7&state=2a1f2e4fdc98cec11044d97bafab8e09d062af83c091c8f20870affe&redirect_uri=https://example-app.com/redirect&code_challenge=xnrmMW7MPnBwqkyLBUgbR2SyeVTp5XhrWxLtBtl9jQE&code_challenge_method=S256) -> Log In -> https://example-app.com/redirect?code=4CL9CvVOO6KNG5uwLj2DXM-AHLRj51d-vg5tiYUdKV0&state=2a1f2e4fdc98cec11044d97bafab8e09d062af83c091c8f20870affe -> make a POST request as bellow to get an access token:
+
+```bash
+    curl -X POST https://dev-xxxxxx.okta.com/oauth2/default/v1/token \
+      -d grant_type=authorization_code \
+      -d redirect_uri=https://example-app.com/redirect \
+      -d client_id={YOUR_CLIENT_ID} \
+      -d code_verifier={YOUR_CODE_VERIFIER} \
+      -d code={YOUR_AUTHORIZATION_CODE}
+```
+
+```bash
+    curl -X POST https://dev-88389792.okta.com/oauth2/default/v1/token \
+      -d grant_type=authorization_code \
+      -d redirect_uri=https://example-app.com/redirect \
+      -d client_id=0oa5al8cuxwP0RfNd5d7 \
+      -d code_verifier=2a1f2e4fdc98cec11044d97bafab8e09d062af83c091c8f20870affe \
+      -d code=4CL9CvVOO6KNG5uwLj2DXM-AHLRj51d-vg5tiYUdKV0
+```
+
+```json
+{
+  "token_type": "Bearer",
+  "expires_in": 3600,
+  "access_token": "eyJraWQiOiI1RVR5MWFEdmJpR1FQUlpBWE1CdHZkaVI1Wm9QUXhWajJOcnRsUENLUWZRIiwiYWxnIjoiUlMyNTYifQ.eyJ2ZXIiOjEsImp0aSI6IkFULmswZ0JZck1iTFNvOWRWbGZ0VVBZYWNVX25xMENGU3loTlU2M2hnbFJsb28ub2FyaHlyNnV0QUpTeDFlcWo1ZDYiLCJpc3MiOiJodHRwczovL2Rldi04ODM4OTc5Mi5va3RhLmNvbS9vYXV0aDIvZGVmYXVsdCIsImF1ZCI6ImFwaTovL2RlZmF1bHQiLCJpYXQiOjE2NTQ1MTg4ODMsImV4cCI6MTY1NDUyMjQ4MywiY2lkIjoiMG9hNWFsOGN1eHdQMFJmTmQ1ZDciLCJ1aWQiOiIwMHU1NnJldnRrUmMyMURaTDVkNyIsInNjcCI6WyJvZmZsaW5lX2FjY2VzcyIsInBob3RvcyJdLCJhdXRoX3RpbWUiOjE2NTQ1MTc0NTQsInN1YiI6ImNvc3RpbkVFU1RAZ2l0aHViLm9rdGFpZHAifQ.KwgJu3wh6p3HxeYVDgWnH4Gp_D7npG4x5X9rx4x8lxVYgiLYoagCZDMeQ4hb7fmHZaWwENVwvnvU5Lo7ZqhH9AJZO4A6I7stQiIY5X-3wcP17g7IZ918Mcp2zWPgCbDM1S206z9-hVg4KdKajU8FSBv0_uMM291qRijqK4oj5v3X1eOwNK7wD1OYOg-Xuda7p2G2LVNkhgby5WqyqqYNhaVEH-T8Vdw8dn7ZQbSzYVXeHPF06QmAQIaw-C1tnl5BOsI1xNyD4MlP62LIobR0ZwrGP3U82cAln425v9eVcN5mDhZdb0m-l0k5D6eiKcL6KFXG6nXNNA1qClF5HwvVJw",
+  "scope": "offline_access photos",
+  "refresh_token": "cyLcl2pOLohArIC4hANybWWx8dcPbcfL7pvy5UUl9tQ"
+}
+```
+
+- Use the refresh token to get a new access token:
+
+```bash
+    curl -X POST https://dev-xxxxxx.okta.com/oauth2/default/v1/token \
+      -d grant_type=refresh_token \
+      -d client_id={YOUR_CLIENT_ID} \
+      -d refresh_token={YOUR_REFRESH_TOKEN}
+```
+
+```bash
+    curl -X POST https://dev-88389792.okta.com/oauth2/default/v1/token \
+      -d grant_type=refresh_token \
+      -d client_id=0oa5al8cuxwP0RfNd5d7 \
+      -d refresh_token=cyLcl2pOLohArIC4hANybWWx8dcPbcfL7pvy5UUl9tQ
+```
+
+```json
+{
+  "token_type": "Bearer",
+  "expires_in": 3600,
+  "access_token": "eyJraWQiOiI1RVR5MWFEdmJpR1FQUlpBWE1CdHZkaVI1Wm9QUXhWajJOcnRsUENLUWZRIiwiYWxnIjoiUlMyNTYifQ.eyJ2ZXIiOjEsImp0aSI6IkFULjRRbUZSMEVsTVBldlJucFpqQV9EWWJ3c0phOFZPcUVHVVAxSFNuLUlzUEkub2FyaHlyNnV0QUpTeDFlcWo1ZDYiLCJpc3MiOiJodHRwczovL2Rldi04ODM4OTc5Mi5va3RhLmNvbS9vYXV0aDIvZGVmYXVsdCIsImF1ZCI6ImFwaTovL2RlZmF1bHQiLCJpYXQiOjE2NTQ1MTkxNDMsImV4cCI6MTY1NDUyMjc0MywiY2lkIjoiMG9hNWFsOGN1eHdQMFJmTmQ1ZDciLCJ1aWQiOiIwMHU1NnJldnRrUmMyMURaTDVkNyIsInNjcCI6WyJvZmZsaW5lX2FjY2VzcyIsInBob3RvcyJdLCJhdXRoX3RpbWUiOjE2NTQ1MTc0NTQsInN1YiI6ImNvc3RpbkVFU1RAZ2l0aHViLm9rdGFpZHAifQ.g_OnWI_RJVoIMqHtoDVvqUdlU-nOsawsUOQ3bqu1cyLuYhSZgNLMtHY9tk_GUKCRWVqXwaF-rCTf0NZHScK2HQzr0OsFshVKAmoPvkFO6R1-ELCW2C0Jhz_XHOnmO0Fk24oFBLNesfPGqjgr8NhSzRWLefJmwFoFoFsYWyLo2IqBRgqf4zR3SbJlwfs8B6XeTt66oDdQ16Yt66rWhiphj-oF9ZmQ-Z5S5QY46Z1U2FGvLEk73YmMYibfennVRksURb4mTYNHtKtYzmJrKgnXTtV6z9EDvuk_LuWUaKZKvp0NLb3dBjs2X6Se0olociTj2s6X4FESEIPUV1bPPkkR9g",
+  "scope": "offline_access photos",
+  "refresh_token": "cyLcl2pOLohArIC4hANybWWx8dcPbcfL7pvy5UUl9tQ"
+}
+```
