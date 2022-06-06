@@ -164,3 +164,6 @@ curl -X POST https://dev-88389792.okta.com/oauth2/default/v1/token \
   "scope": "photos"
 }
 ```
+
+- https://developer.apple.com/documentation/safariservices/sfsafariviewcontroller
+- https://developer.chrome.com/docs/android/custom-tabs
