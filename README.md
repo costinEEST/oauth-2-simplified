@@ -282,6 +282,7 @@ curl -X POST https://dev-88389792.okta.com/oauth2/default/v1/token \
 
 - [RFC 8628: OAuth 2.0 Device Authorization Grant](https://oauth.net/2/device-flow)
 - Device flow for browserless devices:
+
   - User: I'd like to use this great app
   - Device: A user would like to log in
   - AuthorizationServer: Here's a temporary code, check back every 5 sec for the next 5 minutes
@@ -291,3 +292,30 @@ curl -X POST https://dev-88389792.okta.com/oauth2/default/v1/token \
   - Device: Here is the temporary code, has the user logged in yet?
   - AuthorizationServer: Here is an access token!
   - Device: Please let me access this user's data with this access token!
+
+  - Okta Developer dashboard -> Applications -> Applications -> Create App Integration -> API Services -> Save -> make a POST request to get an access token:
+
+  ```bash
+      curl -X POST https://dev-xxxxxx.okta.com/oauth2/default/v1/token \
+      -d grant_type=client_credentials \
+      -d client_id={YOUR_CLIENT_ID} \
+      -d client_secret={YOUR_CLIENT_SECRET} \
+      -d scope={YOUR_CUSTOM_SCOPE}
+  ```
+
+  ```bash
+      curl -X POST https://dev-88389792.okta.com/oauth2/default/v1/token \
+      -d grant_type=client_credentials \
+      -d client_id=0oa5b2htlok3s1sKk5d7 \
+      -d client_secret=SstYDOg1uLbiUdP-0XcfdXsyItJ0Tqq5h2AvtWw3 \
+      -d scope=photos
+  ```
+
+  ```json
+  {
+    "token_type": "Bearer",
+    "expires_in": 3600,
+    "access_token": "eyJraWQiOiI1RVR5MWFEdmJpR1FQUlpBWE1CdHZkaVI1Wm9QUXhWajJOcnRsUENLUWZRIiwiYWxnIjoiUlMyNTYifQ.eyJ2ZXIiOjEsImp0aSI6IkFULkNjX2g1NlhsWVBVajZFSjZOU1RxVnk4LWgzdHBEVE5rc0V5SU51eUdCSmciLCJpc3MiOiJodHRwczovL2Rldi04ODM4OTc5Mi5va3RhLmNvbS9vYXV0aDIvZGVmYXVsdCIsImF1ZCI6ImFwaTovL2RlZmF1bHQiLCJpYXQiOjE2NTQ2MDE3MDIsImV4cCI6MTY1NDYwNTMwMiwiY2lkIjoiMG9hNWIyaHRsb2szczFzS2s1ZDciLCJzY3AiOlsicGhvdG9zIl0sInN1YiI6IjBvYTViMmh0bG9rM3Mxc0trNWQ3In0.AHFLr28IfKYANKdKvIsr8NkMtq8QgJMpEFUqYZHOPI22Bdcjwrpudergy1nNT4OADhQFJEOXJJ7J6AG1tSsZR_uJlD81mzaT0Q7jbZ2f3hcdKUJc5AsrmEO_jO9zITVmLcaAE2Lx84lHey7RBYRusqocUkHZKe3xboE__r1kQXjAZ0Boy1qxZKDDeSgtKTuAdhdm42xYf50svXmUIjJVLboTiJmtB19SbzE40AwbD7Pva2s6V4IISjtmQjBSf4tEc5YaZjIyqYPLVC0xJLZ3YdP-podzaHESdCON6g0K-yIxdXU9WuCLe2wnHsgNsjlPS3zAkrxbaqQN-VSY3jS4Dg",
+    "scope": "photos"
+  }
+  ```
