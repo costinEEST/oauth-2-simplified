@@ -238,3 +238,44 @@ curl -X POST https://dev-88389792.okta.com/oauth2/default/v1/token \
 
 - https://itnext.io/using-service-worker-as-an-auth-relay-5abc402878dd + https://github.com/bartekbp/blog/tree/master/service-worker-auth
 - https://blog.ropnop.com/storing-tokens-in-browser/#service-worker
+- Okta Developer dashboard -> Applications -> Applications -> Create App Integration -> OpenID Connect -> Single-Page Application -> Under Sign-in redirect URIs, replace the default value with https://example-app.com/redirect as the redirect URI for your application -> Allow everyone in your organization to access -> Save
+
+```bash
+    https://dev-xxxxxx.okta.com/oauth2/default/v1/authorize?
+      response_type=code&
+      scope={YOUR_SCOPE}&
+      client_id={YOUR_CLIENT_ID}&
+      state={RANDOM_STRING}&
+      redirect_uri=https://example-app.com/redirect&
+      code_challenge={YOUR_CODE_CHALLENGE}&
+      code_challenge_method=S256
+```
+
+- https://oauth.school/exercise/spa -> Authorization Request(https://dev-88389792.okta.com/oauth2/default/v1/authorize?response_type=code&scope=photos&client_id=0oa5b12p2lM33sFPM5d7&state=a744453c3a9eec46ef3d1437e825dbf63911a2d3745ab49350d5d52e&redirect_uri=https://example-app.com/redirect&code_challenge=Lr6VtOMZTeonOv2c403TFaFsQ27C3NYv643ICQznvHY&code_challenge_method=S256) -> Log In -> https://example-app.com/redirect?code=3D9fLHCIeUmLOipS2lON9qxR0ys8ZVz2ei0A0MAehkQ&state=a744453c3a9eec46ef3d1437e825dbf63911a2d3745ab49350d5d52e -> make a POST request for an access token:
+
+```bash
+    curl -X POST https://dev-xxxxxx.okta.com/oauth2/default/v1/token \
+      -d grant_type=authorization_code \
+      -d redirect_uri=https://example-app.com/redirect \
+      -d client_id={YOUR_CLIENT_ID} \
+      -d code_verifier={YOUR_CODE_VERIFIER} \
+      -d code={YOUR_AUTHORIZATION_CODE}
+```
+
+```bash
+    curl -X POST https://dev-88389792.okta.com/oauth2/default/v1/token \
+      -d grant_type=authorization_code \
+      -d redirect_uri=https://example-app.com/redirect \
+      -d client_id=0oa5b12p2lM33sFPM5d7 \
+      -d code_verifier=a744453c3a9eec46ef3d1437e825dbf63911a2d3745ab49350d5d52e \
+      -d code=3D9fLHCIeUmLOipS2lON9qxR0ys8ZVz2ei0A0MAehkQ
+```
+
+```json
+{
+  "token_type": "Bearer",
+  "expires_in": 3600,
+  "access_token": "eyJraWQiOiI1RVR5MWFEdmJpR1FQUlpBWE1CdHZkaVI1Wm9QUXhWajJOcnRsUENLUWZRIiwiYWxnIjoiUlMyNTYifQ.eyJ2ZXIiOjEsImp0aSI6IkFULkJfWjBEczJvUU1maVdVczdhWFpTczROaFd0Y1k5OEJsQ2JwNTJUZ0VQWWsiLCJpc3MiOiJodHRwczovL2Rldi04ODM4OTc5Mi5va3RhLmNvbS9vYXV0aDIvZGVmYXVsdCIsImF1ZCI6ImFwaTovL2RlZmF1bHQiLCJpYXQiOjE2NTQ1OTI1MjUsImV4cCI6MTY1NDU5NjEyNSwiY2lkIjoiMG9hNWIxMnAybE0zM3NGUE01ZDciLCJ1aWQiOiIwMHU1NnJldnRrUmMyMURaTDVkNyIsInNjcCI6WyJwaG90b3MiXSwiYXV0aF90aW1lIjoxNjU0NTkwNDgxLCJzdWIiOiJjb3N0aW5FRVNUQGdpdGh1Yi5va3RhaWRwIn0.vVqBqZQ6Y3qlqMO4HODctLconf-ML7_TXqOQSMEAkhKmB3LWloqVaowrbfL4IgSFlEe5IlcsSyPImsSZH0yfAa05qyhqHBcM9mDeySF9Hb09GTREP54Kga2tFnqI2LXcgPQNDv3iuIQdylIduggDdF60pjn3mXqAIcC0HkdC7MTUww0yqn2ZRqnPkrmQ0HZIQB4Vlqq3Oe1OLDAPKlWGou6CKe2P5h266O2rqbINOFLSXracte7WVvH_VcwjDsSsEOqBMjKfpMvt71-pgWeg1jRAcxXg4cL3FfZo--QxfyMWyeKdHFM2zm9E5Y7PWnk_ZPkhNjeuZvXyWPrxBUcyFA",
+  "scope": "photos"
+}
+```
