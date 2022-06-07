@@ -235,3 +235,6 @@ curl -X POST https://dev-88389792.okta.com/oauth2/default/v1/token \
   "refresh_token": "cyLcl2pOLohArIC4hANybWWx8dcPbcfL7pvy5UUl9tQ"
 }
 ```
+
+- https://itnext.io/using-service-worker-as-an-auth-relay-5abc402878dd + https://github.com/bartekbp/blog/tree/master/service-worker-auth
+- https://blog.ropnop.com/storing-tokens-in-browser/#service-worker
