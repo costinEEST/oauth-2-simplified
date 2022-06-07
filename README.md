@@ -279,3 +279,15 @@ curl -X POST https://dev-88389792.okta.com/oauth2/default/v1/token \
   "scope": "photos"
 }
 ```
+
+- [RFC 8628: OAuth 2.0 Device Authorization Grant](https://oauth.net/2/device-flow)
+- Device flow for browserless devices:
+  - User: I'd like to use this great app
+  - Device: A user would like to log in
+  - AuthorizationServer: Here's a temporary code, check back every 5 sec for the next 5 minutes
+  - Device Go to this URL and enter this code
+  - User: I'd like to log in to "The best app ever", it wants to access my photos
+  - AuthorizationServer: Ok, i'll let the device know you allowed it next time it checks in
+  - Device: Here is the temporary code, has the user logged in yet?
+  - AuthorizationServer: Here is an access token!
+  - Device: Please let me access this user's data with this access token!
