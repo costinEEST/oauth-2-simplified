@@ -319,3 +319,6 @@ curl -X POST https://dev-88389792.okta.com/oauth2/default/v1/token \
     "scope": "photos"
   }
   ```
+
+  - An access token is what the application gets in order to be able to make API requests. The application gets the token from an authorization server and then sends it to an API to use when making API requests
+  - Applications are going to get an ID token from the authorization server and unpack it to learn about the user.
